@@ -12,6 +12,7 @@ class User(Base):
     password = Column(String(20))
     money = Column(Integer)
     bank = Column(String(40))
+    password = Column(String(20))
 
 class UserBasic(object):
     def __init__(self, first_name, last_name):

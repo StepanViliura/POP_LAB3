@@ -17,3 +17,5 @@
     <span class="psw">Forgot <a href="#">password?</a></span>
   </div>
 </form>
+<p><p>
+<a href="/newUser">Create account</a>
