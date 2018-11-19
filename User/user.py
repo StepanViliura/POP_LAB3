@@ -14,16 +14,29 @@ class User(Base):
     bank = Column(String(40))
 
 class UserBasic(object):
-    def __init__(self, first_name, mid_name, last_name):
+    def __init__(self, first_name, last_name):
         self.first_name = first_name
-        self.mid_name = mid_name
         self.last_name = last_name
 
     def full_name(self):
-        return f'{self.last_name} {self.first_name} {self.mid_name}'
+        return f'{self.last_name} {self.first_name}'
 
 class UserAccount(UserBasic):
-    def __init__(self, first_name, mid_name, last_name, moneyAmout, bank):
-        UserBasic.__init__(self, first_name, mid_name, last_name)
-        self.moneyAmout = moneyAmout
+    def __init__(self, first_name, last_name, moneyAmout, bank, db):
+        UserBasic.__init__(self, first_name, last_name)
+        self.moneyAmount = moneyAmout
         self.bank = bank
+        self.database = db
+    
+    def getMoneyAmount(self):
+        return self.moneyAmount
+    
+    def getBank(self):
+        return self.bank
+    
+    def changeName(self, name):
+        return 0
+    def CompareInitials(self, name, surname):
+        if self.first_name != name or self.last_name != surname :
+            return False
+        return True

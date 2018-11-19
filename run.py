@@ -4,6 +4,7 @@ from bottle.ext import sqlalchemy
 from sqlalchemy import create_engine, Column, Integer, Sequence, String
 from sqlalchemy.orm import sessionmaker, Session
 from User.user import User, UserAccount
+from Transactions.transactions import Transaction
 
 engine = create_engine('mysql://root@localhost/lab3')
 
@@ -13,7 +14,12 @@ plugin = sqlalchemy.Plugin(engine, keyword='db')
 app.install(plugin)
 session = Session()
 
+
 AvailableUser = 0
+def checkLogIn():
+    if not AvailableUser:
+        return redirect('/')
+
 @app.get('/')
 def home(db):
     if not AvailableUser :
@@ -23,14 +29,25 @@ def home(db):
         return template('home')
 
 @app.get('/login')
-def otherLog():
+def login():
     return template('login')
 
 @app.get('/logout')
-def otherLog():
+def logout():
     global AvailableUser
     AvailableUser = 0
     return redirect('/')
+
+@app.get('/oldTransactions/<name>/<surname>')
+def getOldTransactions(name, surname, db):
+    checkLogIn()
+    if not AvailableUser.CompareInitials(name, surname):
+        return redirect('/')
+    table_data = db.query(Transaction)
+    results = []
+    for transaction in table_data:
+        print(transaction.sender_r)
+
 
 @app.post('/logining')
 def createUser(db):
@@ -39,7 +56,7 @@ def createUser(db):
     for user in table_data:
         global AvailableUser
         if user.name == request.forms.get('uname') and user.password == request.forms.get('psw'):
-            AvailableUser = UserAccount(user.name, user.surname, "", user.money, user.bank)  
+            AvailableUser = UserAccount(user.name, user.surname, user.money, user.bank, db)  
     return redirect('/')
 
 
